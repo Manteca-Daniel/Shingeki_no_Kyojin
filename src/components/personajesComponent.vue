@@ -2,8 +2,10 @@
     <h1>PERSONAJES</h1>
     <ul>
         <li v-for="character in characters" :key="character.id">
-            {{ character.name }}
-            <img :src="character.img" :alt="character.name">
+            <router-link :to="`/personajes/${character.id}`">
+                {{ character.name }}
+                <img :src="character.img" :alt="character.name">
+            </router-link>
         </li>
     </ul>
     <button v-if="currentPage < totalPages" @click="loadMoreCharacters">Cargar más</button>

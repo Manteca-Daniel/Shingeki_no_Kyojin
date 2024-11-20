@@ -5,45 +5,57 @@ import Personajes from './pages/Personajes.vue'
 import Capitulos from './pages/Capitulos.vue'
 import Bandos from './pages/Bandos.vue'
 import Curiosidades from './pages/Curiosidades.vue'
+import PersonajeDetalle from './pages/PersonajeDetalle.vue'
+import Capitulo from './pages/Capitulo.vue'
 
 import { createApp } from 'vue'
 import App from './App.vue'
 
 const router = createRouter({
-    history: createWebHistory(import.meta.env.BASE_URL),
-    routes: [
+  history: createWebHistory(import.meta.env.BASE_URL),
+  routes: [
       {
-        path: '/',
-        name: 'home',
-        component: Home,
+          path: '/',
+          name: 'home',
+          component: Home,
       },
       {
-        path: '/about',
-        name: 'about',
-        component: About,
+          path: '/about',
+          name: 'about',
+          component: About,
       },
       {
-        path: '/personajes',
-        name: 'personajes',
-        component: Personajes,
+          path: '/personajes',
+          name: 'personajes',
+          component: Personajes,
       },
       {
-        path: '/capitulos',
-        name: 'capitulos',
-        component: Capitulos,
+          path: '/personajes/:id',
+          name: 'personajeDetalle',
+          component: PersonajeDetalle,
       },
       {
-        path: '/bandos',
-        name: 'bandos',
-        component: Bandos,
+          path: '/capitulos',
+          name: 'capitulos',
+          component: Capitulos,
       },
       {
-        path: '/curiosidades',
-        name: 'curiosidades',
-        component: Curiosidades,
+        path: '/capitulo/:id',
+        name: 'capitulo',
+        component: Capitulo,
+    },
+      {
+          path: '/bandos',
+          name: 'bandos',
+          component: Bandos,
       },
-    ],
-})
+      {
+          path: '/curiosidades',
+          name: 'curiosidades',
+          component: Curiosidades,
+      },
+  ],
+});
 
 const app = createApp(App)
 

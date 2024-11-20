@@ -16,7 +16,7 @@
 
     const fetchCuriosidades = async () => {
         try {
-            const response = await fetch('/curiosidades.json');
+            const response = await fetch('/content/curiosidades.json');
             if (!response.ok) {
                 throw new Error('Error al cargar las curiosidades');
             }
