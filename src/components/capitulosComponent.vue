@@ -1,14 +1,18 @@
 <template>
     <h1>CAPÍTULOS</h1>
     <ul>
+
+      
       <li v-for="chapter in chapters" :key="chapter.id">
         <router-link :to="{ name: 'capitulo', params: { id: chapter.id } }">
           <div>
             <h3>{{ chapter.name }}</h3>
-            <img :src="chapter.img" :alt="chapter.name" />
+            <img :src="chapter.img  || '/img/Placeholder.png'" :alt="chapter.name" />
           </div>
         </router-link>
       </li>
+
+
     </ul>
     <button v-if="currentPage < totalPages" @click="loadMoreChapters">Cargar más</button>
 </template>

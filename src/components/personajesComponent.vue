@@ -1,10 +1,12 @@
 <template>
     <h1>PERSONAJES</h1>
-    <ul>
+    <ul>    
         <li v-for="character in characters" :key="character.id">
             <router-link :to="`/personajes/${character.id}`">
-                {{ character.name }}
-                <img :src="character.img" :alt="character.name">
+                <div>
+                    <h3>{{ character.name }}</h3>
+                    <img :src="character.img  || '/img/Placeholder.png'" :alt="character.name">
+                </div>
             </router-link>
         </li>
     </ul>

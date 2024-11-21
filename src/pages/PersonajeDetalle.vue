@@ -44,7 +44,10 @@
             <h2>Episodios</h2>
             <ul>
                 <li v-for="(episode, index) in character.episodes" :key="index">
-                    <a :href="episode" target="_blank">Episodio {{ index + 1 }}</a>
+                    <router-link :to="{ name: 'capitulo', params: { id: index+1 } }">
+                        <div target="_blank">Episodio {{ index + 1 }}</div>
+                    </router-link>
+                    
                 </li>
             </ul>
         </div>

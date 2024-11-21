@@ -1,10 +1,20 @@
 <template>
     <h1>BANDOS</h1>
     <ul>
+
+
+
         <li v-for="organization in organizations" :key="organization.id">
-            {{ organization.name }}
-            <img :src="organization.img" :alt="organization.name">
+            <!-- <router-link :to="{ name: 'capitulo', params: { id: chapter.id } }"> -->
+                <div>
+                    <h3>{{ organization.name }}</h3>
+                    <img :src="organization.img === 'unknown' ? '/img/Placeholder.png' : organization.img" :alt="organization.name">
+                    {{ console.log('Imagen: ', organization.img) }}
+                </div>
+
+            <!-- </router-link> -->     
         </li>
+
     </ul>
     <button v-if="currentPage < totalPages" @click="loadMoreOrganizations">Cargar más</button>
 </template>
@@ -32,7 +42,6 @@
             data.results.forEach(organization => {
                 if (organization.img) {
                     organization.img = organization.img.replace(/(\.png|\.jpg|\.jpeg)(.*)$/, '$1');
-                    console.log("La url de la imagen es esta: ", organization.img);
                 }
             });
 
