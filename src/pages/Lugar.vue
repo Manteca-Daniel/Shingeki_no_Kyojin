@@ -1,28 +1,34 @@
 <template>
-    <div v-if="location">
-        <h1>{{ location.name === 'unknown' ? 'Desconocido' : location.name }}</h1>
-        <img v-if="isUrl(location.img)" :src="location.img" :alt="location.name" />
-        <p><strong>Territorio:</strong> {{ location.territory === 'unknown' ? 'Desconocido' : location.territory }}</p>
-        <p><strong>Región:</strong> {{ location.region === 'unknown' ? 'Desconocido' : location.region }}</p>
-        <p v-if="notableInhabitants.length">
-            <strong>Habitantes Notables:</strong> 
+    <div v-if="location" class="location-container">
+        <h1 class="location-name">{{ location.name === 'unknown' ? 'Desconocido' : location.name }}</h1>
+        <img
+            v-if="isUrl(location.img)"
+            :src="location.img"
+            :alt="location.name"
+            class="location-image"
+        />
+        <p class="location-detail"><strong>Territorio:</strong> {{ location.territory === 'unknown' ? 'Desconocido' : location.territory }}</p>
+        <p class="location-detail"><strong>Región:</strong> {{ location.region === 'unknown' ? 'Desconocido' : location.region }}</p>
+        <p v-if="notableInhabitants.length" class="location-detail">
+            <strong>Habitantes Notables:</strong>
             {{ notableInhabitants.length ? notableInhabitants.join(', ') : 'Desconocido' }}
         </p>
-        <p v-if="notableFormerInhabitants.length">
-            <strong>Antiguos Habitantes Notables:</strong> 
+        <p v-if="notableFormerInhabitants.length" class="location-detail">
+            <strong>Antiguos Habitantes Notables:</strong>
             {{ notableFormerInhabitants.length ? notableFormerInhabitants.join(', ') : 'Desconocido' }}
         </p>
-        <p v-if="location.debut">
+        <p v-if="location.debut" class="location-detail">
             <strong>Debut:</strong>
             <router-link :to="{ name: 'capitulo', params: { id: extractId(location.debut) } }">
                 Episodio {{ extractId(location.debut) }}
             </router-link>
         </p>
     </div>
-    <div v-else>
+    <div v-else class="loading-container">
         <p>Cargando datos del lugar...</p>
     </div>
 </template>
+
 
 <script>
 import { ref, onMounted } from 'vue';
@@ -67,7 +73,6 @@ export default {
                 if (!response.ok) throw new Error("No se pudo obtener la información del lugar.");
                 const data = await response.json();
 
-                // Limpiar URL de la imagen
                 if (data.img) {
                     data.img = data.img.replace(/(\.png|\.jpg|\.jpeg)(.*)$/, '$1');
                 }
@@ -105,3 +110,49 @@ export default {
     },
 };
 </script>
+
+<style scoped>
+.location-container {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    max-width: 600px;
+    margin: 20px auto;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    font-family: 'Arial', sans-serif;
+}
+
+.location-name {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 16px;
+    text-align: center;
+}
+
+.location-image {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto 16px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+.location-detail {
+    font-size: 16px;
+    color: #555;
+    margin: 8px 0;
+}
+
+.location-detail strong {
+    color: #222;
+}
+
+.loading-container {
+    text-align: center;
+    font-size: 18px;
+    color: #666;
+}
+</style>
+
