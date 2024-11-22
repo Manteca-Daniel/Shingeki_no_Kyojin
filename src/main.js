@@ -7,6 +7,9 @@ import Bandos from './pages/Bandos.vue'
 import Curiosidades from './pages/Curiosidades.vue'
 import PersonajeDetalle from './pages/PersonajeDetalle.vue'
 import Capitulo from './pages/Capitulo.vue'
+import Titanes from './pages/Titanes.vue'
+import Localicaciones from './pages/Localicaciones.vue'
+import Lugar from './pages/Lugar.vue'
 
 import { createApp } from 'vue'
 import App from './App.vue'
@@ -54,6 +57,21 @@ const router = createRouter({
           name: 'curiosidades',
           component: Curiosidades,
       },
+      {
+        path: '/localicaciones',
+        name: 'localicaciones',
+        component: Localicaciones,
+    },
+    {
+        path: '/titanes',
+        name: 'titanes',
+        component: Titanes,
+    },
+    {
+        path: '/lugar/:id',
+        name: 'lugar',
+        component: Lugar,
+    },
   ],
 });
 

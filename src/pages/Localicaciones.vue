@@ -1,16 +1,16 @@
 <template>
     <div class="home">
-      <CapitulosComponent />
+      <LocalicacionesComponent />
     </div>
 </template>
   
 <script>
-  import CapitulosComponent from '@/components/capitulosComponent.vue';
+  import LocalicacionesComponent from '@/components/localicacionesComponent.vue';
   
   export default {
-    name: 'Capitulos',
+    name: 'Localicaciones',
     components: {
-      CapitulosComponent,
+        LocalicacionesComponent,
     },
   };
 </script>
@@ -21,3 +21,4 @@
     padding: 20px;
   }
 </style>
+  

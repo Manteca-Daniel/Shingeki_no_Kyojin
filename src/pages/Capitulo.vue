@@ -1,7 +1,9 @@
 <template>
-    <iframe :src="cap" frameborder="0" width="640" height="360" allowfullscreen></iframe>
+    <div class="iframe-container">
+        <iframe :src="cap" frameborder="0" allowfullscreen></iframe>
+    </div>
 </template>
-  
+
 <script setup>
     import { ref, onMounted, watch } from "vue";
     import { useRoute } from "vue-router";
@@ -38,10 +40,42 @@
         } catch (error) {
             console.error('Error al obtener los datos:', error);
         }
-        };
+    };
     
     watch(id, fetchCapitulo);
     
     onMounted(fetchCapitulo);
 </script>
-  
+
+<style scoped>
+    /* Contenedor responsivo para el iframe */
+    .iframe-container {
+        position: relative;
+        width: 100%;
+        padding-bottom: 56.25%; /* Aspect ratio 16:9 (altura:ancho) */
+        height: 0;
+        overflow: hidden;
+    }
+
+    /* Estilo del iframe */
+    iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+    /* Medidas adicionales para móviles y tablets */
+    @media (max-width: 768px) {
+        .iframe-container {
+            padding-bottom: 56.25%; /* 16:9 */
+        }
+    }
+
+    @media (max-width: 480px) {
+        .iframe-container {
+            padding-bottom: 75%; /* Ajuste para pantallas más pequeñas */
+        }
+    }
+</style>

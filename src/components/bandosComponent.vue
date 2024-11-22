@@ -9,7 +9,6 @@
                 <div>
                     <h3>{{ organization.name }}</h3>
                     <img :src="organization.img === 'unknown' ? '/img/Placeholder.png' : organization.img" :alt="organization.name">
-                    {{ console.log('Imagen: ', organization.img) }}
                 </div>
 
             <!-- </router-link> -->     

@@ -10,10 +10,11 @@
       <router-link class="text-white text-decoration-none fw-bold mx-2" :to="{ name: 'capitulos' }">Capítulos</router-link>
       <router-link class="text-white text-decoration-none fw-bold mx-2" :to="{ name: 'bandos' }">Bandos</router-link>
       <router-link class="text-white text-decoration-none fw-bold mx-2" :to="{ name: 'curiosidades' }">Curiosidades</router-link>
+      <router-link class="text-white text-decoration-none fw-bold mx-2" :to="{ name: 'localicaciones' }">Localicaciones</router-link>
+      <router-link class="text-white text-decoration-none fw-bold mx-2" :to="{ name: 'titanes' }">Titanes principales</router-link>
     </nav>
   </header>
 
-  <!-- Main Content -->
   <main class="container my-5 bg-light bg-opacity-75 p-4 rounded shadow">
     <RouterView />
   </main>
