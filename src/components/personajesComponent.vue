@@ -2,7 +2,7 @@
     <h1>PERSONAJES</h1>
     <ul>    
         <li v-for="character in characters" :key="character.id">
-            <router-link :to="`/personajes/${character.id}`">
+            <router-link :to="{ name: 'personajeDetalle', params: { id: character.id} }">
                 <div>
                     <h3>{{ character.name }}</h3>
                     <img :src="character.img  || '/img/Placeholder.png'" :alt="character.name">

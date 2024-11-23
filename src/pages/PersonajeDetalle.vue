@@ -19,13 +19,13 @@
 
             <section>
                 <h2>Familia</h2>
-                <ul v-if="character.relatives.length > 0" class="familia-lista">
-                    <li v-for="(relative, index) in character.relatives[0].members" :key="index">
-                        <a v-if="isUrl(relative)" :href="relative" target="_blank">Ver miembro (ID en la API)</a>
-                        <span v-else>{{ relative }}</span>
+                <ul class="familia-lista">
+                    <li v-for="(relative, index) in relativesNames" :key="index">
+                        <router-link :to="{ name: 'personajeDetalle', params: { id: relative.id } }">
+                            {{ relative.name }}
+                        </router-link>
                     </li>
                 </ul>
-                <p v-else>No hay información sobre familiares.</p>
             </section>
 
             <section>
@@ -55,7 +55,7 @@
                 <h2>Episodios</h2>
                 <ul class="episodios-lista">
                     <li v-for="(episode, index) in character.episodes" :key="index">
-                        <router-link :to="{ name: 'capitulo', params: { id: index+1 } }">
+                        <router-link :to="{ name: 'capitulo', params: { id: index + 1 } }">
                             Episodio {{ index + 1 }}
                         </router-link>
                     </li>
@@ -72,6 +72,7 @@ import { useRoute } from 'vue-router';
 
 const route = useRoute();
 const character = ref(null);
+const relativesNames = ref([]);
 
 const isUrl = (text) => {
     try {
@@ -87,13 +88,47 @@ const fetchCharacter = async (id) => {
         const response = await fetch(`https://api.attackontitanapi.com/characters/${id}`);
         if (!response.ok) throw new Error("No se pudo obtener la información del personaje.");
         const data = await response.json();
+
         if (data.img) {
             data.img = data.img.replace(/(\.png|\.jpg|\.jpeg)(.*)$/, '$1');
         }
         character.value = data;
+
+        if (data.relatives && data.relatives.length > 0) {
+            const members = data.relatives.map(rel => rel.members || []).flat();
+            const names = await Promise.all(
+                members.map(async (relative) => {
+                    if (isUrl(relative)) {
+                        const name = await fetchCharacterName(relative);
+                        return { name, id: extractIdFromUrl(relative) };
+                    }
+                    return { name: relative.name || relative, id: relative.id || null };
+                })
+            );
+            relativesNames.value = names.filter(rel => rel.id); // Solo incluye los familiares con ID
+        } else {
+            relativesNames.value = [];
+        }
     } catch (error) {
         console.error("Error al obtener los datos del personaje:", error);
     }
+};
+
+const fetchCharacterName = async (url) => {
+    try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error("Error al obtener el nombre del personaje.");
+        const data = await response.json();
+        return data.name || "Desconocido";
+    } catch (error) {
+        console.error("Error al obtener el nombre del personaje:", error);
+        return "Desconocido";
+    }
+};
+
+const extractIdFromUrl = (url) => {
+    const match = url.match(/\/characters\/(\d+)/);
+    return match ? match[1] : null;
 };
 
 onMounted(() => {
