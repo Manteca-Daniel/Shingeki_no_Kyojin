@@ -11,6 +11,7 @@ import Titanes from './pages/Titanes.vue'
 import Localicaciones from './pages/Localicaciones.vue'
 import Lugar from './pages/Lugar.vue'
 import Titan from './pages/Titan.vue'
+import Bando from './pages/Bando.vue'
 
 import { createApp } from 'vue'
 import App from './App.vue'
@@ -77,6 +78,11 @@ const router = createRouter({
             path: '/titan/:id',
             name: 'titan',
             component: Titan,
+        },
+        {
+            path: '/bando/:id',
+            name: 'bando',
+            component: Bando,
         },
     ],
 });

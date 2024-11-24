@@ -5,13 +5,13 @@
 
 
         <li v-for="organization in organizations" :key="organization.id">
-            <!-- <router-link :to="{ name: 'capitulo', params: { id: chapter.id } }"> -->
+            <router-link :to="{ name: 'bando', params: { id: organization.id } }">
                 <div>
                     <h3>{{ organization.name }}</h3>
                     <img :src="organization.img === 'unknown' ? '/img/Placeholder.png' : organization.img" :alt="organization.name">
                 </div>
 
-            <!-- </router-link> -->     
+            </router-link>    
         </li>
 
     </ul>
