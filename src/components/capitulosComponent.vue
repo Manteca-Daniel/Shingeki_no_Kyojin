@@ -1,65 +1,99 @@
 <template>
+  <div class="chapters-container">
     <h1>CAPÍTULOS</h1>
-    <ul>
-
-      
-      <li v-for="chapter in chapters" :key="chapter.id">
+    <Splide class="splide" :options="{
+      perPage: 4,
+      pagination: false,
+      arrows: true,
+      gap: '1rem',
+      breakpoints: {
+        1024: { perPage: 3, gap: '0.5rem' },
+        768: { perPage: 2, gap: '0.5rem' },
+        480: { perPage: 1, gap: '0.5rem' },
+      }
+    }" aria-label="CAPÍTULOS">
+      <SplideSlide v-for="chapter in chapters" :key="chapter.id">
         <router-link :to="{ name: 'capitulo', params: { id: chapter.id } }">
-          <div>
-            <h3>{{ chapter.name }}</h3>
-            <img :src="chapter.img  || '/img/Placeholder.png'" :alt="chapter.name" />
+          <div class="chapter-card">
+            <h3 class="chapter-title">{{ chapter.id + ' - ' + chapter.name }}</h3>
+            <img :src="chapter.img || '/img/Placeholder.png'" :alt="chapter.name" class="chapter-image" />
           </div>
         </router-link>
-      </li>
+      </SplideSlide>
 
-
-    </ul>
-    <button v-if="currentPage < totalPages" @click="loadMoreChapters">Cargar más</button>
+    </Splide>
+  </div>
 </template>
-  
+
 <script setup>
-  import { ref, onMounted } from 'vue';
-  import '../assets/css/capitulosComponent.scss'
-  
-  const chapters = ref([]);
-  const totalPages = ref(0);
-  const currentPage = ref(1);
-  
-  const fetchChapters = async (page = 1) => {
-    try {
+import { ref, onMounted } from 'vue';
+import '../assets/css/capitulosComponent.scss';
+import { Splide, SplideSlide } from '@splidejs/vue-splide';
+import '@splidejs/splide/css'; // Importar estilos de Splide
+
+const chapters = ref([]);
+
+// Función para cargar todos los capítulos
+const fetchAllChapters = async () => {
+  try {
+    let page = 1;
+    let allChapters = [];
+    let hasMorePages = true;
+
+    while (hasMorePages) {
       const response = await fetch(`https://api.attackontitanapi.com/episodes?page=${page}`);
       if (!response.ok) {
         throw new Error("No se pudieron obtener los datos");
       }
+
       const data = await response.json();
-  
-      if (page === 1) {
-        totalPages.value = data.info.pages;
-      }
-  
       data.results.forEach(chapter => {
         if (chapter.img) {
           chapter.img = chapter.img.replace(/(\.png|\.jpg|\.jpeg)(.*)$/, '$1');
-          console.log("La url de la imagen es esta: ", chapter.img);
         }
       });
-  
-      chapters.value.push(...data.results);
-      console.log(`Datos cargados de la página ${page}`);
-    } catch (error) {
-      console.error("Error al cargar los datos:", error);
+
+      allChapters.push(...data.results);
+
+      // Verifica si hay más páginas para cargar
+      hasMorePages = page < data.info.pages;
+      page++;
     }
-  };
-  
-  onMounted(() => {
-    fetchChapters(currentPage.value);
-  });
-  
-  const loadMoreChapters = () => {
-    if (currentPage.value < totalPages.value) {
-      currentPage.value++;
-      fetchChapters(currentPage.value);
-    }
-  };
+
+    chapters.value = allChapters;
+  } catch (error) {
+    console.error("Error al cargar los datos:", error);
+  }
+};
+
+onMounted(() => {
+  fetchAllChapters();
+});
 </script>
-  
+
+<style scoped>
+.chapters-container {
+  padding: 20px;
+}
+
+.splide {
+  margin-top: 20px;
+}
+
+.chapter-card {
+  text-align: center;
+  padding: 10px;
+}
+
+.chapter-title {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
+.chapter-image {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+</style>
