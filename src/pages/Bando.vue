@@ -5,21 +5,18 @@
             <img :src="organization.img" :alt="organization.name" class="image" />
             <p class="info"><strong>Affiliation:</strong> {{ organization.affiliation }}</p>
 
-
             <p class="info">
                 <strong>Episodio Debut:</strong>
                 <router-link :to="{ name: 'capitulo', params: { id: extractId(organization.debut) } }">
                     {{ extractId(organization.debut) }}
                 </router-link>
-                
             </p>
-
 
             <div v-if="organization.notable_members.length" class="section">
                 <h2 class="subtitle">Notable Members</h2>
                 <ul class="list">
-                    <li v-for="member in organization.notable_members" :key="member" class="list-item">
-                        <a :href="member" target="_blank" class="link">View Member</a>
+                    <li v-for="(member, index) in organization.notable_members" :key="member" class="list-item">
+                        <a :href="member" target="_blank" class="link">{{ miembro[index] }}</a>
                     </li>
                 </ul>
             </div>
@@ -29,7 +26,7 @@
                 <ul class="list">
                     <li v-for="formerMember in organization.notable_former_members" :key="formerMember"
                         class="list-item">
-                        <a :href="formerMember" target="_blank" class="link">View Former Member</a>
+                        <a :href="formerMember" target="_blank" class="link">{{ formerMember.name }}</a>
                     </li>
                 </ul>
             </div>
@@ -38,12 +35,14 @@
     </div>
 </template>
 
+
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 
 const route = useRoute();
 const organization = ref(null);
+const miembro = ref([]);
 
 const fetchOrganization = async (id) => {
     try {
@@ -51,20 +50,39 @@ const fetchOrganization = async (id) => {
         if (!response.ok) throw new Error("Error fetching data");
         organization.value = await response.json();
 
-        // Ajuste de la URL de la imagen.
         if (organization.value && organization.value.img) {
             organization.value.img = organization.value.img.replace(/(\.png|\.jpg|\.jpeg)(.*)$/, '$1');
+        }
+
+        if (organization.value.notable_members) {
+            miembro.value = await Promise.all(
+                organization.value.notable_members.map((url) => nameCharacter(url))
+            );
         }
     } catch (error) {
         console.error("Error fetching organization:", error);
     }
 };
 
+const nameCharacter = async (url) => {
+    try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error("No se pudo obtener la información del personaje.");
+        const data = await response.json();
+        return data.name || "Nombre no disponible";
+    } catch (error) {
+        console.error("Error al obtener los datos del personaje:", error);
+        return url;
+    }
+};
+
+// Extraer el ID de una URL
 const extractId = (url) => {
     const parts = url.split('/');
     return parts[parts.length - 1];
 };
 
+// Llamar a la API al montar el componente
 onMounted(() => {
     const id = route.params.id; // Obtener el parámetro ID de la URL.
     if (id) fetchOrganization(id);
@@ -73,7 +91,7 @@ onMounted(() => {
 
 
 <style scoped>
-/* Contenedor principal */
+
 .container {
     max-width: 800px;
     margin: 0 auto;
@@ -85,7 +103,6 @@ onMounted(() => {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Estilo para la tarjeta */
 .card {
     background: #fff;
     border-radius: 10px;
@@ -150,17 +167,4 @@ onMounted(() => {
     text-decoration: underline;
 }
 
-/* Secciones */
-.section {
-    margin: 20px 0;
-    padding-top: 10px;
-    border-top: 1px solid #ddd;
-}
-
-/* Loading */
-.loading {
-    text-align: center;
-    font-size: 1.2em;
-    color: #7f8c8d;
-}
 </style>

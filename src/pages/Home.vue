@@ -11,7 +11,7 @@ import ShingekiMain from '@/components/ShingekiMain.vue';
 export default {
   name: 'Home',
   components: {
-    ShingekiMain, // Registra el componente
+    ShingekiMain,
   },
 };
 </script>
