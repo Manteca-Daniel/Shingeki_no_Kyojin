@@ -8,7 +8,6 @@
         class="search-bar"
     />
 
-    <!-- Lista de bandos -->
     <ul>
         <li
             v-for="organization in filteredOrganizations"

@@ -16,7 +16,10 @@
                 <h2 class="subtitle">Notable Members</h2>
                 <ul class="list">
                     <li v-for="(member, index) in organization.notable_members" :key="member" class="list-item">
-                        <a :href="member" target="_blank" class="link">{{ miembro[index] }}</a>
+                        <router-link :to="{ name: 'personajeDetalle', params: { id: extractId(member) } }">
+                            {{ miembro[index] }}
+                        </router-link>
+                        {{ console.log(extractId(member)) }}
                     </li>
                 </ul>
             </div>
@@ -76,7 +79,6 @@ const nameCharacter = async (url) => {
     }
 };
 
-// Extraer el ID de una URL
 const extractId = (url) => {
     const parts = url.split('/');
     return parts[parts.length - 1];

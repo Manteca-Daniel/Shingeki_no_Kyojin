@@ -1,7 +1,7 @@
 <template>
   <div class="background-image"></div>
   
-  <!-- Header -->
+
   <header class="bg-dark bg-opacity-75 text-center py-3">
     <h1 class="text-danger fw-bold">SHINGEKI NO KYOJIN WORLD</h1>
     <nav class="mt-3">
