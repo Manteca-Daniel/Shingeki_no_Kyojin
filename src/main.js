@@ -16,6 +16,8 @@ import Bando from './pages/Bando.vue';
 import { createApp } from 'vue';
 import App from './App.vue';
 
+import '@fortawesome/fontawesome-free/css/all.min.css';
+
 import { Splide, SplideSlide } from '@splidejs/vue-splide';
 import '@splidejs/splide/css';
 

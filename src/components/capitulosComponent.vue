@@ -29,11 +29,10 @@
 import { ref, onMounted } from 'vue';
 import '../assets/css/capitulosComponent.scss';
 import { Splide, SplideSlide } from '@splidejs/vue-splide';
-import '@splidejs/splide/css'; // Importar estilos de Splide
+import '@splidejs/splide/css';
 
 const chapters = ref([]);
 
-// Función para cargar todos los capítulos
 const fetchAllChapters = async () => {
   try {
     let page = 1;
@@ -55,7 +54,6 @@ const fetchAllChapters = async () => {
 
       allChapters.push(...data.results);
 
-      // Verifica si hay más páginas para cargar
       hasMorePages = page < data.info.pages;
       page++;
     }
