@@ -67,12 +67,21 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, watch, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 
 const route = useRoute();
 const character = ref(null);
 const relativesNames = ref([]);
+
+watch(
+    () => route.params.id,
+    async (newId) => {
+        console.log('Cambiando a un nuevo ID:', newId);
+        if (newId) await fetchCharacter(newId);
+    },
+    { immediate: true }
+);
 
 const isUrl = (text) => {
     try {
@@ -105,7 +114,7 @@ const fetchCharacter = async (id) => {
                     return { name: relative.name || relative, id: relative.id || null };
                 })
             );
-            relativesNames.value = names.filter(rel => rel.id); // Solo incluye los familiares con ID
+            relativesNames.value = names.filter(rel => rel.id);
         } else {
             relativesNames.value = [];
         }
