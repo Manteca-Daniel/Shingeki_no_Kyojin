@@ -35,19 +35,18 @@
 <script setup>
 import { ref, computed, onMounted } from "vue";
 import { useRoute } from "vue-router";
+import axios from "axios";
 
 const route = useRoute();
 const titan = ref(null);
 const currentInheritors = ref([]);
 const formerInheritors = computed(() => titan.value?.former_inheritors || []);
-const idCharacter = ref('');
 
 const fetchTitan = async (id) => {
     try {
-        const response = await fetch(`https://api.attackontitanapi.com/titans/${id}`);
-        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+        const response = await axios.get(`https://api.attackontitanapi.com/titans/${id}`);
+        const data = response.data;
 
-        const data = await response.json();
         console.log("Datos recibidos del titán:", data);
 
         data.img = data.img?.replace(/(\.png|\.jpg|\.jpeg)(.*)$/, "$1");
@@ -74,9 +73,8 @@ const fetchTitan = async (id) => {
 
 const fetchCharacterNameCurrent = async (url) => {
     try {
-        const response = await fetch(url);
-        if (!response.ok) throw new Error("Error fetching character data.");
-        const data = await response.json();
+        const response = await axios.get(url);
+        const data = response.data;
         return { id: data.id, name: data.name || "Unknown" };
     } catch (error) {
         console.error("Error fetching character name:", error);
@@ -86,9 +84,8 @@ const fetchCharacterNameCurrent = async (url) => {
 
 const fetchCharacterNameFormers = async (url) => {
     try {
-        const response = await fetch(url);
-        if (!response.ok) throw new Error("Error fetching character data.");
-        const data = await response.json();
+        const response = await axios.get(url);
+        const data = response.data;
         return { id: data.id, name: data.name || "Unknown" };
     } catch (error) {
         console.error("Error fetching character name:", error);

@@ -19,13 +19,14 @@
 
 <script setup>
 import { ref, computed, onMounted, onBeforeMount, onUpdated, onBeforeUnmount } from "vue";
+import axios from "axios";
 import "../assets/css/personajesComponent.scss";
 
 const characters = ref([]);
 const totalPages = ref(0);
 const currentPage = ref(1);
 const searchQuery = ref("");
-const abortController = ref(null);
+const cancelToken = ref(null);
 
 const filteredCharacters = computed(() => {
     return characters.value.filter((character) =>
@@ -37,22 +38,18 @@ const filteredCharacters = computed(() => {
 
 const fetchCharacters = async (page = 1) => {
     try {
-        if (abortController.value) {
-            abortController.value.abort();
+        if (cancelToken.value) {
+            cancelToken.value.cancel("Nueva solicitud realizada");
         }
 
-        abortController.value = new AbortController();
+        cancelToken.value = axios.CancelToken.source();
 
-        const response = await fetch(
-            `https://api.attackontitanapi.com/characters?page=${page}`,
-            { signal: abortController.value.signal }
-        );
+        const response = await axios.get(`https://api.attackontitanapi.com/characters`, {
+            params: { page },
+            cancelToken: cancelToken.value.token,
+        });
 
-        if (!response.ok) {
-            throw new Error("No se pudieron obtener los datos");
-        }
-
-        const data = await response.json();
+        const data = response.data;
 
         if (page === 1) {
             totalPages.value = data.info.pages;
@@ -61,7 +58,7 @@ const fetchCharacters = async (page = 1) => {
         data.results.forEach((organization) => {
             if (organization.img) {
                 organization.img = organization.img.replace(
-                    /(\.png|\.jpg|\.jpeg)(.*)$/,
+                    /(\.png|\.jpg|\.jpeg)(.*)$/i,
                     "$1"
                 );
             }
@@ -74,7 +71,9 @@ const fetchCharacters = async (page = 1) => {
             fetchCharacters(currentPage.value);
         }
     } catch (error) {
-        if (error.name !== 'AbortError') {
+        if (axios.isCancel(error)) {
+            console.log("Solicitud cancelada:", error.message);
+        } else {
             console.error("Error al cargar los datos:", error);
         }
     }
@@ -83,7 +82,7 @@ const fetchCharacters = async (page = 1) => {
 onBeforeMount(() => {
     console.log("Componente a punto de montarse");
 
-    if (typeof window !== 'undefined' && window.someTimer) {
+    if (typeof window !== "undefined" && window.someTimer) {
         clearTimeout(window.someTimer);
     }
 });
@@ -96,19 +95,18 @@ onMounted(() => {
 onUpdated(() => {
     if (filteredCharacters.value.length === 0 && searchQuery.value !== "") {
         console.log("No se encontraron personajes con la búsqueda: ", searchQuery.value);
-    }
-    else {
+    } else {
         console.log("El componente se ha actualizado");
     }
 });
 
 onBeforeUnmount(() => {
     console.log("Componente a punto de desmontarse");
-    if (abortController.value) {
-        abortController.value.abort();
+    if (cancelToken.value) {
+        cancelToken.value.cancel("Componente desmontado");
     }
 
-    if (typeof window !== 'undefined' && window.someTimer) {
+    if (typeof window !== "undefined" && window.someTimer) {
         clearTimeout(window.someTimer);
     }
 });
@@ -120,17 +118,3 @@ const loadMoreCharacters = () => {
     }
 };
 </script>
-
-
-<style scoped>
-.search-bar {
-    display: block;
-    margin: 1rem 0;
-    padding: 0.5rem;
-    width: 100%;
-    max-width: 400px;
-    font-size: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-</style>

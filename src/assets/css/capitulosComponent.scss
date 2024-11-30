@@ -58,5 +58,27 @@ button:disabled {
     cursor: not-allowed;
 }
 
+.chapters-container {
+    padding: 20px;
+}
 
-// Splide
+.splide {
+    margin-top: 20px;
+}
+
+.chapter-card {
+    text-align: center;
+    padding: 10px;
+}
+
+.chapter-title {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+}
+
+.chapter-image {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}

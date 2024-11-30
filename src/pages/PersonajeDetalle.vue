@@ -69,6 +69,7 @@
 <script setup>
 import { ref, watch, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
+import axios from 'axios';
 
 const route = useRoute();
 const character = ref(null);
@@ -94,9 +95,8 @@ const isUrl = (text) => {
 
 const fetchCharacter = async (id) => {
     try {
-        const response = await fetch(`https://api.attackontitanapi.com/characters/${id}`);
-        if (!response.ok) throw new Error("No se pudo obtener la información del personaje.");
-        const data = await response.json();
+        const response = await axios.get(`https://api.attackontitanapi.com/characters/${id}`);
+        const data = response.data;
 
         if (data.img) {
             data.img = data.img.replace(/(\.png|\.jpg|\.jpeg)(.*)$/, '$1');
@@ -125,9 +125,8 @@ const fetchCharacter = async (id) => {
 
 const fetchCharacterName = async (url) => {
     try {
-        const response = await fetch(url);
-        if (!response.ok) throw new Error("Error al obtener el nombre del personaje.");
-        const data = await response.json();
+        const response = await axios.get(url);
+        const data = response.data;
         return data.name || "Desconocido";
     } catch (error) {
         console.error("Error al obtener el nombre del personaje:", error);

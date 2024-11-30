@@ -19,7 +19,6 @@
                         <router-link :to="{ name: 'personajeDetalle', params: { id: extractId(member) } }">
                             {{ miembro[index] }}
                         </router-link>
-                        {{ console.log(extractId(member)) }}
                     </li>
                 </ul>
             </div>
@@ -38,10 +37,10 @@
     </div>
 </template>
 
-
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
+import axios from 'axios';
 
 const route = useRoute();
 const organization = ref(null);
@@ -49,9 +48,8 @@ const miembro = ref([]);
 
 const fetchOrganization = async (id) => {
     try {
-        const response = await fetch(`https://api.attackontitanapi.com/organizations/${id}`);
-        if (!response.ok) throw new Error("Error fetching data");
-        organization.value = await response.json();
+        const response = await axios.get(`https://api.attackontitanapi.com/organizations/${id}`);
+        organization.value = response.data;
 
         if (organization.value && organization.value.img) {
             organization.value.img = organization.value.img.replace(/(\.png|\.jpg|\.jpeg)(.*)$/, '$1');
@@ -69,12 +67,10 @@ const fetchOrganization = async (id) => {
 
 const nameCharacter = async (url) => {
     try {
-        const response = await fetch(url);
-        if (!response.ok) throw new Error("No se pudo obtener la información del personaje.");
-        const data = await response.json();
-        return data.name || "Nombre no disponible";
+        const response = await axios.get(url);
+        return response.data.name || "Nombre no disponible";
     } catch (error) {
-        console.error("Error al obtener los datos del personaje:", error);
+        console.error("Error fetching character data:", error);
         return url;
     }
 };
@@ -91,9 +87,7 @@ onMounted(() => {
 });
 </script>
 
-
 <style scoped>
-
 .container {
     max-width: 800px;
     margin: 0 auto;
@@ -168,5 +162,4 @@ onMounted(() => {
 .list-item a:hover {
     text-decoration: underline;
 }
-
 </style>

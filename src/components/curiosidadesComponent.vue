@@ -9,24 +9,25 @@
 </template>
 
 <script setup>
-    import { ref, onMounted } from "vue";
-    import "../assets/css/curiosidadesComponent.scss";
+import { ref, onMounted } from "vue";
+import axios from "axios";
+import "../assets/css/curiosidadesComponent.scss";
 
-    const curiosidades = ref([]);
+const curiosidades = ref([]);
 
-    const fetchCuriosidades = async () => {
-        try {
-            const response = await fetch('/content/curiosidades.json');
-            if (!response.ok) {
-                throw new Error('Error al cargar las curiosidades');
-            }
-            const data = await response.json();
-            curiosidades.value = data.curiosidades;
-            console.log(curiosidades.value)
-        } catch (error) {
-            console.error('Error al obtener los datos:', error);
+const fetchCuriosidades = async () => {
+    try {
+        const response = await axios.get('/content/curiosidades.json');
+        if (response.status !== 200) {
+            throw new Error('Error al cargar las curiosidades');
         }
-    };
+        const data = response.data;
+        curiosidades.value = data.curiosidades;
+        console.log(curiosidades.value)
+    } catch (error) {
+        console.error('Error al obtener los datos:', error);
+    }
+};
 
-    onMounted(fetchCuriosidades);
+onMounted(fetchCuriosidades);
 </script>

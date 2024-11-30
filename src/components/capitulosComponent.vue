@@ -20,16 +20,16 @@
           </div>
         </router-link>
       </SplideSlide>
-
     </Splide>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import '../assets/css/capitulosComponent.scss';
-import { Splide, SplideSlide } from '@splidejs/vue-splide';
-import '@splidejs/splide/css';
+import { ref, onMounted } from "vue";
+import "../assets/css/capitulosComponent.scss";
+import { Splide, SplideSlide } from "@splidejs/vue-splide";
+import "@splidejs/splide/css";
+import axios from "axios";
 
 const chapters = ref([]);
 
@@ -40,15 +40,15 @@ const fetchAllChapters = async () => {
     let hasMorePages = true;
 
     while (hasMorePages) {
-      const response = await fetch(`https://api.attackontitanapi.com/episodes?page=${page}`);
-      if (!response.ok) {
-        throw new Error("No se pudieron obtener los datos");
-      }
+      const response = await axios.get("https://api.attackontitanapi.com/episodes", {
+        params: { page },
+      });
 
-      const data = await response.json();
-      data.results.forEach(chapter => {
+      const data = response.data;
+
+      data.results.forEach((chapter) => {
         if (chapter.img) {
-          chapter.img = chapter.img.replace(/(\.png|\.jpg|\.jpeg)(.*)$/, '$1');
+          chapter.img = chapter.img.replace(/(\.png|\.jpg|\.jpeg)(.*)$/, "$1");
         }
       });
 
@@ -68,30 +68,3 @@ onMounted(() => {
   fetchAllChapters();
 });
 </script>
-
-<style scoped>
-.chapters-container {
-  padding: 20px;
-}
-
-.splide {
-  margin-top: 20px;
-}
-
-.chapter-card {
-  text-align: center;
-  padding: 10px;
-}
-
-.chapter-title {
-  font-size: 1.2rem;
-  margin-bottom: 10px;
-}
-
-.chapter-image {
-  width: 100%;
-  height: auto;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-</style>
