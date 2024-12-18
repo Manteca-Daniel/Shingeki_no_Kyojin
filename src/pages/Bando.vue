@@ -120,7 +120,6 @@ onMounted(() => {
     color: #34495e;
 }
 
-/* Imagen */
 .image {
     max-width: 100%;
     height: auto;
@@ -129,7 +128,6 @@ onMounted(() => {
     border: 1px solid #ddd;
 }
 
-/* Información */
 .info {
     font-size: 1em;
     margin: 10px 0;
@@ -144,7 +142,6 @@ onMounted(() => {
     text-decoration: underline;
 }
 
-/* Listas */
 .list {
     list-style: none;
     padding: 0;
